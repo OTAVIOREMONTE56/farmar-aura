@@ -4,7 +4,7 @@ const GAME_OVER_VOLUME = .10;
 
 // One media element and one optional gain node for mobile volume support.
 export function createBackgroundMusic() {
-  const audio = new Audio('/assets/audio/Arcade%20Groove.mp3');
+  const audio = new Audio((import.meta.env?.BASE_URL ?? '/') + 'assets/audio/Arcade%20Groove.mp3');
   audio.loop = true;
   audio.preload = 'none';
   audio.volume = 0;

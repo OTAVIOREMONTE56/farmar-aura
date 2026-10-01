@@ -7,7 +7,7 @@ import { createPassinhoV2 } from './passinhoV2.js';
 import { disposeObject } from './disposeObject.js';
 
 export const ANIMATION_NAMES = Object.freeze(['idle', 'passinho', 'giro', 'moonwalk', 'pose-sigma', 'dab', 'breakdance']);
-export const CHARACTER_URL = '/models/character/frog.glb';
+export const CHARACTER_URL = (import.meta.env?.BASE_URL ?? '/') + 'models/character/frog.glb';
 
 export function createCharacter({ url = CHARACTER_URL, height = 1.8, facingRotation = 0, loader = new GLTFLoader(), onChange = () => {} } = {}) {
   // Transformações de apresentação ficam fora da hierarquia animada do GLB.
