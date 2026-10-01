@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.tools/
+*.log
+
+# Local environment and editor files
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary directories from local shell setup
+/%SystemDrive%/
+/-c/
+/.exe/
+/vite build/
