@@ -390,3 +390,19 @@ html, body { height:100%; height:100dvh; }
 @media(max-width:1100px) and (orientation:landscape){.online-ui header{right:46%;font-size:10px;gap:3px;}.online-opponent{font-size:10px;}.online-hud{font-size:10px;}.online-hud strong{font-size:16px;}.online-lives{font-size:15px;}.online-buttons{left:55%;right:8px;transform:none;width:auto;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}.online-buttons button{min-height:64px;padding:4px 1px;}.online-buttons span{font-size:25px;}.online-buttons b{font-size:10px;}.online-progress{left:77%;bottom:162px;font-size:10px;}.online-cue,.online-feedback{left:27%;max-width:50%;font-size:12px;}.online-overlay section{padding:14px 20px;}.online-overlay p{margin:8px 0;font-size:14px;}.online-overlay button{min-height:46px;}}
 
 .online-code{display:block;font-size:clamp(40px,11vw,62px);letter-spacing:.12em;color:#e1ff90;margin:12px 0;font-variant-numeric:tabular-nums;}
+
+/* Online duel: two visual lanes, one local control pad. */
+.online-ui{display:flex;flex-direction:column;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));gap:6px;}
+.online-ui header{position:static;flex:none;font-size:11px;gap:3px;padding:5px 7px;}
+.online-cue{position:static;transform:none;grid-column:1/-1;max-width:100%;padding:2px;font-size:12px;background:none;}
+.online-duel-huds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:none;}
+.online-duel-hud{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:3px;padding:6px;background:#101b28eb;border-radius:12px;text-align:center;font-size:11px;min-width:0;}
+.online-duel-hud .online-self,.online-duel-hud .online-lives,.online-duel-hud .online-progress,.online-player-cue{grid-column:1/-1;}
+.online-duel-hud .online-aura{font-size:16px;color:#e1ff90;}.online-duel-hud .online-lives{font-size:16px;}
+.online-duel-hud .online-progress{position:static;transform:none;padding:0;background:none;font-size:10px;white-space:normal;}
+.online-player-cue{font-size:10px;min-height:13px;color:#e1ff90;}
+.online-buttons{position:static;left:auto;right:auto;bottom:auto;transform:none;width:min(870px,100%);margin:auto auto 0;flex:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+.online-buttons button{min-height:64px;}.online-buttons span{font-size:25px;}
+.online-feedback{top:auto;bottom:174px;left:50%;max-width:94%;font-size:11px;}
+@media(min-width:700px){.online-buttons{grid-template-columns:repeat(6,minmax(0,1fr));}.online-buttons button{min-height:76px;}.online-feedback{bottom:104px;}}
+@media(max-height:500px){.online-ui{gap:3px;}.online-ui header{padding:2px 6px;}.online-ui header button{min-height:30px;}.online-duel-hud{grid-template-columns:repeat(4,minmax(0,1fr));padding:3px;font-size:10px;gap:1px;}.online-duel-hud .online-self{grid-column:1/3;}.online-duel-hud .online-lives{grid-column:3/5;font-size:13px;}.online-duel-hud .online-aura{grid-column:1/3;font-size:13px;}.online-duel-hud .online-combo{grid-column:3/5;}.online-player-cue{min-height:11px;}.online-buttons{grid-template-columns:repeat(6,minmax(0,1fr));padding:3px;gap:4px;}.online-buttons button{min-height:48px;}.online-buttons span{font-size:19px;}.online-buttons b{font-size:9px;}.online-buttons small{display:none;}.online-feedback{bottom:64px;}}

@@ -139,11 +139,11 @@ test('client keeps newer realtime state when an older RPC arrives; subscribes on
 test('online camera keeps animated frog inside usable space in six mobile sizes and desktop',()=>{
  globalThis.window={matchMedia:()=>({matches:false})};
  const character=createCharacter(),camera=new THREE.PerspectiveCamera(45,1,.05,200),director=new CameraDirector(camera,character);
- for(const [width,height] of [[360,800],[390,844],[430,932],[800,360],[844,390],[932,430],[1440,900]]){
-  const side=width>height&&width<=1100;
-  const top=190,bottom=side?height-12:height-(width<=600?218:156);
-  const right=side?width*.55-12:width;
-  camera.aspect=width/height;director.resize({width,height,top,bottom,left:8,right});
+ for(const [screenWidth,height] of [[320,568],[360,800],[390,844],[430,932],[800,360],[844,390],[932,430],[1440,900]]){
+  const width=screenWidth/2;
+  const top=height<=500?150:210,bottom=height-(height<=500?92:screenWidth<700?200:130);
+  const right=width-4;
+  camera.aspect=width/height;director.resize({width,height,top,bottom,left:4,right});
   for(const name of ['passinho','giro','moonwalk','pose-sigma','dab','breakdance']){
    character.stopAnimation({fade:0});character.mixer.stopAllAction();
    assert(character.playAnimation(name,{fade:0,loop:false}));
@@ -152,7 +152,7 @@ test('online camera keeps animated frog inside usable space in six mobile sizes 
     const box=character.getBounds();
     for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){
      const point=new THREE.Vector3(x,y,z).project(camera),sx=(point.x+1)*width/2,sy=(1-point.y)*height/2;
-     assert(sx>=7&&sx<=right+1,'online horizontal '+width+'x'+height+' '+name);
+     assert(sx>=3&&sx<=right+1,'online horizontal '+width+'x'+height+' '+name);
      assert(sy>=top-1&&sy<=bottom+1,'online vertical '+width+'x'+height+' '+name);
     }
    }
