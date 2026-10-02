@@ -1,71 +1,69 @@
-# Farmar Aura
+# FARMAR AURA
 
-Base independente de jogo web 3D em JavaScript, Vite e Three.js. A base inclui câmera, iluminação, chão e sistema de personagem com sapo procedural temporário.
+Jogo web 3D de memória e dança, em JavaScript, Vite e Three.js. Na tela inicial, escolha **1 JOGADOR** ou **2 JOGADORES → LOCAL / ONLINE**.
 
 ## Executar
 
-Foi incluído um Node.js isolado em `.tools`, sem alterar a instalação global. Você pode clicar duas vezes em `abrir-jogo.cmd`.
+Com Node.js 22.12 ou superior:
 
-Para usar `npm run dev` no PowerShell desta pasta, primeiro configure o PATH apenas nesse terminal:
+    npm install
+    npm run dev
 
-```powershell
-$runtime = (Get-ChildItem .tools -Directory -Filter "node-*-win-x64" | Select-Object -First 1).FullName
-$env:Path = "$runtime;$env:Path"
-npm.cmd run dev
-```
+Nesta pasta também existe um Node.js isolado em .tools. Você pode clicar duas vezes em abrir-jogo.cmd ou configurar o PATH somente no seu terminal PowerShell:
 
-Com Node.js 22.12 ou superior e npm já disponíveis:
+    $runtime = (Get-ChildItem .tools -Directory -Filter "node-*-win-x64" | Select-Object -First 1).FullName
+    $env:Path = "$runtime;$env:Path"
+    npm.cmd run dev
 
-```powershell
-npm install
-npm run dev
-```
+Abra o endereço informado pelo Vite, com caminho /farmar-aura/. Para encerrar, pressione Ctrl+C.
 
-Abra o endereço informado pelo Vite (normalmente http://127.0.0.1:5173). Para encerrar, pressione Ctrl+C no terminal.
+    npm test
+    npm run build
+    npm run preview
 
-```powershell
-npm run build
-npm run preview
-```
+## 1 jogador
+
+Memorize as danças demonstradas pelo sapo e repita usando Q/W/E/R/T/Y ou os seis botões de toque. Cada nível preserva a sequência e adiciona um movimento. Um erro consome uma das três vidas e demonstra novamente a mesma sequência. Entradas ficam bloqueadas durante demonstrações e animações. Não há limite de tempo para responder.
+
+A pontuação permanece: +25 Aura por movimento correto, +100 × nível por sequência completa e +50 extras se não houve erro naquele nível. Combo conta sequências completas sem perder vida, com mínimo x1. Recordes de Aura e sequência usam armazenamento local. Esse modo funciona sem configurar o Supabase.
+
+## 2 jogadores online
+
+Cada aparelho mostra seu próprio personagem 3D, vidas, Aura, combo, progresso e seis botões. O adversário aparece de forma compacta no topo. O modo online usa uma cena por aparelho; o modo local permanece disponível no menu.
+
+Crie uma sala para gerar um código de seis caracteres. No outro aparelho, entre pelo código. A partida começa quando os dois personagens estiverem carregados. São cinco rodadas, com a mesma sequência para ambos e pontuação independente. Uma revanche exige que os dois toquem JOGAR NOVAMENTE; SAIR DA SALA encerra a sala para ambos.
+
+**Configuração completa:** [supabase/README.md](supabase/README.md).
+
+**SQL para execução manual:** [supabase/multiplayer.sql](supabase/multiplayer.sql).
+
+Antes de usar o online, copie .env.example para .env.local e preencha VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY com a URL e chave pública do seu projeto. Reinicie o servidor ou gere o build novamente. Nenhum SQL é executado remotamente pelo código ou pelos testes.
+
+Para jogar em redes diferentes, os aparelhos precisam acessar uma versão atualizada do jogo em uma URL pública HTTPS. Supabase sincroniza os aparelhos, mas não publica o frontend. Nenhuma publicação no GitHub foi feita nesta implementação.
+
+## Personagem, animações e música
+
+O modelo existente fica em public/models/character/frog.glb. Se estiver indisponível, o carregador mantém o sapo procedural. A hierarquia do modelo e os clips existentes não foram alterados pelo multiplayer.
+
+O sistema de personagem mantém load, registerAnimation, registerAnimationAlias, playAnimation, stopAnimation, update e dispose. As seis danças continuam sendo passinho, giro, moonwalk, pose-sigma, dab e breakdance, com retorno ao idle e enquadramento pelo CameraDirector. A música Arcade Groove usa o gerenciamento existente de volume, silêncio e ativação por gesto do usuário.
 
 ## Organização
 
-- `src/core`: renderizador, câmera, ciclo de renderização e redimensionamento.
-- `src/world`: cena, iluminação e chão.
-- `src/entities`: futuros personagens e objetos.
-- `src/systems`: futuras animações e regras de gameplay.
-- `src/ui`: futuro HUD.
-- `src/audio`: futuro gerenciamento de áudio.
-- `public/assets/models`, `animations`, `textures`, `audio`: futuros recursos estáticos.
+- src/core: cena, renderizador, câmera e ciclo de renderização; createApp para solo e createOnlineApp para online.
+- src/game: regras do solo e implementação anterior do multiplayer local, preservada como referência e com seus testes.
+- src/online: cliente Supabase, sincronização e timeline das demonstrações.
+- src/ui: lobby, HUD, identidade visual dos movimentos e controles de teclado/toque.
+- src/entities/character: carregamento do modelo, sapo procedural e animações.
+- src/world e src/audio: cenário, iluminação e música.
+- supabase: SQL, policies e instruções de configuração.
+- tests: testes de solo, modo local, mobile, cliente online e SQL local via PGlite.
 
-Os diretórios de funcionalidades futuras permanecem reservados. Nenhum gameplay, HUD ou áudio foi implementado.
+As regras antigas de tempo em src/game/createGame.js e src/systems/auraRound.js continuam desconectadas do modo principal e preservadas como referência para um futuro SPEED AURA.
 
-## Personagem 3D
+Os testes verificam o SQL em PostgreSQL local, sem credenciais e sem conexão remota. O transporte real de Supabase Realtime ainda deve ser validado em dois aparelhos depois da configuração do projeto.
 
-Coloque o GLB em `public/models/character/frog.glb` e recarregue a página. Até lá, um sapo humanoide verde articulado, vestido com jaqueta laranja, camiseta clara, calça cargo escura, tênis, óculos e corrente dourada é usado como personagem temporário. Sua geometria e animações estão separadas do carregador GLB.
+## Publicação no GitHub Pages
 
-O modelo deve estar em pé, com Y para cima e frente em +Z. O sistema normaliza a altura para 1,8 unidades e posiciona os pés no chão. Se a frente for -Z, configure `facingRotation: Math.PI` na criação do personagem em `src/core/createApp.js`. A câmera enquadra o modelo ao carregar e ao redimensionar a janela.
+O workflow .github/workflows/deploy.yml testa e gera o build antes de publicar. VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY estão configuradas no passo Build com os valores públicos deste projeto; variáveis de repositório com esses nomes podem substituí-los. .env.local permanece ignorado. Nunca configure service_role, senha de banco ou chave secreta no frontend.
 
-`src/entities/character/createCharacter.js` expõe `load`, `registerAnimation`, `registerAnimationAlias`, `playAnimation`, `stopAnimation`, `update` e `dispose`. Clips do GLB são registrados pelo nome; `idle` inicia automaticamente se existir. Os nomes planejados são `idle`, `passinho`, `giro`, `moonwalk`, `pose-sigma`, `dab` e `breakdance`. O sapo procedural inclui seus próprios clips Idle e Passinho; ao carregar o GLB, esses clips são descartados e substituídos pelas animações do arquivo.
-
-Exemplo de integração futura: `character.registerAnimationAlias("passinho", "Dance"); character.playAnimation("passinho");`. Animações externas ficam em `public/animations/` e precisarão de um rig compatível.
-
-## Teste do sapo procedural
-
-Use o botão PASSINHO ou a tecla Q para executar uma dança de aproximadamente um segundo. O personagem retorna suavemente ao Idle. O botão IDLE também permite interromper a dança suavemente. Os controles são temporários e não implementam pontuação ou gameplay.
-
-- `createProceduralFrog.js`: geometrias arredondadas, roupa, acessórios e pivôs.
-- `frogAnimations.js`: clips gerados por código para os membros, joelhos, cotovelos, tronco e cabeça.
-- `createAnimationControls.js`: botões de teste e tecla Q.
-
-Execute `node scripts/check-character.mjs` para verificar o sistema e `node scripts/check-controls.mjs` para conferir os eventos dos controles.
-
-## Modo principal: Memória + Dança
-
-A partida começa com duas danças demonstradas pelo sapo. Repita a ordem usando Q/W/E/R/T/Y ou toque; cada nível preserva a sequência e adiciona um movimento. Entradas ficam bloqueadas durante demonstrações e animações em andamento. Um erro consome uma das três vidas e demonstra novamente a mesma sequência. Não há limite de tempo para responder.
-
-Pontuação: 25 Aura por movimento correto, 100 × nível por sequência completa e 50 extras se não houve erro naquele nível. Combo conta sequências completas sem perder vida (mínimo x1). Sequência máxima representa o maior comprimento alcançado, inclusive a sequência que encerrou a partida. Recordes usam armazenamento local; o recorde anterior de Aura é preservado.
-
-As regras antigas de tempo em src/game/createGame.js e src/systems/auraRound.js estão desconectadas do modo principal e reservadas como referência para um futuro SPEED AURA.
-
-Testes das regras: node --test tests/memoryGame.test.js
+Endereço público: https://otavioremonte56.github.io/farmar-aura/

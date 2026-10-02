@@ -37,6 +37,10 @@ jobs:
           node scripts/verify-game.mjs
           node scripts/verify-movements.mjs
       - name: Build
+        env:
+          # Public frontend configuration; these values are included in the browser bundle.
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://ytkjfxykzoywkemgqpuc.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_IrIJYunwz6uenDxNYdjhXw_naXrybXB' }}
         run: npm run build
       - name: Configure Pages
         uses: actions/configure-pages@v5

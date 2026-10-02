@@ -1,5 +1,5 @@
 // Touch gestures submit once on release; mouse and accessible clicks remain native.
-export function bindMovementInput(buttons, submit) {
+export function bindMovementInput(buttons, submit, { allowNonPrimary = false } = {}) {
   let active = null, suppressClickUntil = 0;
   const removers = [];
   const listen = (button, type, handler) => {
@@ -14,7 +14,7 @@ export function bindMovementInput(buttons, submit) {
     listen(button, 'pointerdown', event => {
       if (event.pointerType === 'mouse') return;
       event.preventDefault();
-      if (!event.isPrimary || active || button.disabled) return;
+      if ((!allowNonPrimary && !event.isPrimary) || active || button.disabled) return;
       active = {id:event.pointerId, button};
       button.classList.add('touch-pressed');
       button.setPointerCapture(event.pointerId);
